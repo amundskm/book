@@ -17,21 +17,41 @@ function book(title, author, pages, read){
 
 // Add Book to myLibrary
   // event listener on addBook button, show form.
-function addBookToLibrary(title, author, pages, read){
-  let newBook = new book(title, author, pages, read)
-  // when the html form for an new book is submitted, add the book to mylibary,
-  myLibrary.push(newBook);
-  // hide new book form
+function addBookToLibrary(){
+  title = document.getElementById("title").value;
+  author = document.getElementById("author").value;
+  pages = document.getElementById("pages").value;
+  if(document.getElementById("read").checked){
+    read = "true"
+  }else{
+    read = "false"
+  }
+
+  if ((title === '') && (author === '') && (pages === '')){
+    alert("One of your inputs is blank")
+  } else{
+    let newBook = new book(title, author, pages, read)
+    // when the html form for an new book is submitted, add the book to mylibary,
+    myLibrary.push(newBook)
+    // hide new book form
+    updateLibrary()
+  }
 }
 // Show Each Book in myLibary on webpage
 
 function updateLibrary(){
 
-  cardContainer = document.querySelector("#newBookCards");
-  console.log(myLibrary)
+  let  cardContainer = document.getElementById("newBookCards");
+
+// TODO: // temporary way to make sure the list is updated correctly. Fix later.
+  while (cardContainer.firstChild) {
+      cardContainer.removeChild(cardContainer.firstChild);
+  }
+
+  // create card for each book in myLibrary
   for (index in myLibrary){
     var template = `
-     <div class="card">
+     <div class="card"}">
         <div class="card-body">
           <h5 class="card-title" id="book-title"></h5>
           <ul class= "list-group">
@@ -40,22 +60,23 @@ function updateLibrary(){
             <li class="list-group-item book-element-pages">${myLibrary[index].pages}</li>
             <li class="list-group-item book-element-read">${myLibrary[index].read}</li>
           </ul>
-          <button type="submit" class="btn btn-primary" id="deleteBookBtn">Delete Book</button>
+          <button type="submit" class="btn btn-primary delete-book" id="deleteBookBtn-${index}">Delete Book</button>
         </div>
       </div>`
 
-
     newDiv = document.createElement("DIV")
-    newDiv.className = "book-card"
+    newDiv.className = `book-card-${index}`
     cardContainer.appendChild(newDiv)
     newDiv.innerHTML = template;
-  }
+    }
 }
-// Add Button to Remove any Book in myLibary
+
+function deleteBook(index){
+  myLibrary.splice(index)
+  updateLibrary()
+}
+// Remove book from libra
 
 // Add Button to Change any Book Status to Read
 
 // Optional
-addBookToLibrary("The Hobbit", "J.R.R Tolkien", 299, "True");
-addBookToLibrary("The Fellowship of the Ring", "J.R.R Tolkien", 564, "True");
-updateLibrary()
